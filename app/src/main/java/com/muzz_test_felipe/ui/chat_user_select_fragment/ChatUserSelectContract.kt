@@ -12,8 +12,13 @@ interface ChatUserSelectContract {
         val error: LiveData<Resource.Error>
         val selectedUser: LiveData<UserModel>
         val usersToSelect: LiveData<List<UserModel>>
+        val usersToChat: LiveData<List<UserModel>>
+        val isSelectUsersClicked: LiveData<Boolean>
     }
 
     interface ViewActions {
+        fun updateSelectedUser(position: Int)
+
+        fun selectUsersClicked()
     }
 }

@@ -23,6 +23,9 @@ class ChatUserSelectViewModel(
         userRepository.getUsersFromDatabase()
     }
 
+    private val _isSelectUsersClicked = MutableLiveData(false)
+    override val isSelectUsersClicked: LiveData<Boolean> = _isSelectUsersClicked
+
     init {
         _error.addSource(getUsersFromDbResult) {
             when (it) {
@@ -31,11 +34,33 @@ class ChatUserSelectViewModel(
                 is Resource.Success -> {
                     it.data?.let {
                         _selectedUser.value = it.first()
-                        _usersToSelect.value = it
+                        _usersToSelect.value = it.filter {
+                            it.id != _selectedUser.value?.id.orEmpty()
+                        }
                     }
                 }
             }
         }
+    }
+
+    override fun updateSelectedUser(position: Int) {
+        val tempSelectedUser = _selectedUser.value
+
+        when (position) {
+            0 -> {
+                _selectedUser.value = _usersToSelect.value?.first()
+            }
+            1 -> {
+                _selectedUser.value = _usersToSelect.value?.last()
+            }
+        }
+        _usersToSelect.value = _usersToSelect.value?.minus(_selectedUser.value!!)
+        _usersToSelect.value = _usersToSelect.value?.plus(tempSelectedUser!!)
+        _isSelectUsersClicked.value = false
+    }
+
+    override fun selectUsersClicked() {
+        _isSelectUsersClicked.value = _isSelectUsersClicked.value == false
     }
 
     class Factory(
