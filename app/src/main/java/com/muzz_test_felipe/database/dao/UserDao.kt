@@ -9,6 +9,6 @@ import com.muzz_test_felipe.database.model_entity.UserEntity
 abstract class UserDao : BaseDao<UserEntity>() {
 
     @Query("SELECT * FROM userentity")
-    abstract fun getUser(): LiveData<UserEntity>
+    abstract fun getUsers(): List<UserEntity>
 
 }

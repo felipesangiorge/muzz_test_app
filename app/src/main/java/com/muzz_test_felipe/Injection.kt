@@ -11,7 +11,8 @@ object Injection {
     private var appDatabase: AppDatabase? = null
     fun provideAppDatabase(context: Context): AppDatabase {
         return appDatabase ?: let {
-            appDatabase = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "urmomenzdatabase")
+            appDatabase = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "muzzdatabase")
+                .createFromAsset("database/muzzdatabase.db")
                 .fallbackToDestructiveMigration()
                 .build()
             appDatabase!!

@@ -1,15 +1,15 @@
 package com.muzz_test_felipe.ui.chat_user_select_fragment
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.muzz_test_felipe.core.Resource
+import com.muzz_test_felipe.data.UserRepository
 import com.muzz_test_felipe.domain.model_domain.UserModel
 
-class ChatUserSelectViewModel() : ViewModel(), ChatUserSelectContract.ViewModel {
+class ChatUserSelectViewModel(
+    private val userRepository: UserRepository
+) : ViewModel(), ChatUserSelectContract.ViewModel {
 
-    private val _error = MutableLiveData<Resource.Error>()
+    private val _error = MediatorLiveData<Resource.Error>()
     override val error: LiveData<Resource.Error> = _error
 
     private val _selectedUser = MutableLiveData<UserModel>()
@@ -18,13 +18,33 @@ class ChatUserSelectViewModel() : ViewModel(), ChatUserSelectContract.ViewModel 
     private val _usersToSelect = MutableLiveData<List<UserModel>>()
     override val usersToSelect: LiveData<List<UserModel>> = _usersToSelect
 
-    init {
-
+    private val getUsersFromDbAction = MutableLiveData(Unit)
+    private val getUsersFromDbResult = getUsersFromDbAction.switchMap {
+        userRepository.getUsersFromDatabase()
     }
 
-    class Factory() : ViewModelProvider.Factory {
+    init {
+        _error.addSource(getUsersFromDbResult) {
+            when (it) {
+                is Resource.Failure -> _error.value = it.error
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    it.data?.let {
+                        _selectedUser.value = it.first()
+                        _usersToSelect.value = it
+                    }
+                }
+            }
+        }
+    }
+
+    class Factory(
+        private val userRepository: UserRepository
+    ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ChatUserSelectViewModel() as T
+            return ChatUserSelectViewModel(
+                userRepository
+            ) as T
         }
     }
 }

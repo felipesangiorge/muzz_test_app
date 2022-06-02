@@ -6,6 +6,7 @@ import com.muzz_test_felipe.core.Resource
 import com.muzz_test_felipe.database.AppDatabase
 import com.muzz_test_felipe.database.dao.UserDao
 import com.muzz_test_felipe.database.mapper.MapperUserDomainToUserEntity
+import com.muzz_test_felipe.domain.mapper.MapperUserEntityToUserDomain
 import com.muzz_test_felipe.domain.model_domain.UserModel
 import com.muzz_test_felipe.extensions.NonnullMediatorLiveData
 
@@ -28,6 +29,22 @@ class UserRepository(
                 }
             }
             result.postValue(Resource.Success(Unit))
+        }
+
+        return result
+    }
+
+    fun getUsersFromDatabase(
+    ): LiveData<Resource<List<UserModel>>> {
+
+        val result = NonnullMediatorLiveData<Resource<List<UserModel>>>(Resource.Loading(null))
+
+        appExecutors.diskIo().execute {
+            db.runInTransaction {
+                result.postValue(Resource.Success(userDao.getUsers().map {
+                    MapperUserEntityToUserDomain.mapFromEntityToDomain(it)
+                }))
+            }
         }
 
         return result

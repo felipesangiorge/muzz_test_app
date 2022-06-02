@@ -15,6 +15,5 @@ interface ChatUserSelectContract {
     }
 
     interface ViewActions {
-
     }
 }

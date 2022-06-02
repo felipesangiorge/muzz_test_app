@@ -10,5 +10,5 @@ data class UserEntity(
     @PrimaryKey
     @ColumnInfo(name = "user_id") val id: String,
     @ColumnInfo(name = "user_name") val userName: String,
-    @ColumnInfo(name = "user_pictureUrl") val userPictureUrl: String?
+    @ColumnInfo(name = "user_pictureUrl") val userPictureUrl: String
 ) : EntityModel
