@@ -1,0 +1,3 @@
+package com.muzz_test_felipe.database.model_entity
+
+interface EntityModel
