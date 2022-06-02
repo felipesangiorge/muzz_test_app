@@ -2,6 +2,8 @@ package com.muzz_test_felipe
 
 import android.content.Context
 import androidx.room.Room
+import com.muzz_test_felipe.core.AppExecutors
+import com.muzz_test_felipe.data.UserRepository
 import com.muzz_test_felipe.database.AppDatabase
 
 object Injection {
@@ -14,5 +16,21 @@ object Injection {
                 .build()
             appDatabase!!
         }
+    }
+
+    private var appExcutors: AppExecutors? = null
+    fun provideAppExecutors() = appExcutors ?: let {
+        appExcutors = AppExecutors()
+        appExcutors!!
+    }
+
+    private var userRepository: UserRepository? = null
+    fun provideUserRepository(context: Context) = userRepository ?: let {
+        userRepository = UserRepository(
+            provideAppDatabase(context),
+            provideAppDatabase(context).userDao(),
+            provideAppExecutors()
+        )
+        userRepository!!
     }
 }

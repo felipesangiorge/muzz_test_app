@@ -2,8 +2,8 @@
     <string name="app_name">muzz_test_felipe</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="chat_user_select_fragment_label">Chat User Select</string>
+    <string name="chat_fragment_label">Chat Main</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
