@@ -10,9 +10,9 @@ interface ChatUserSelectContract {
 
     interface ViewState {
         val error: LiveData<Resource.Error>
+        val navigation: LiveData<ViewInstructions>
         val selectedUser: LiveData<UserModel>
         val usersToSelect: LiveData<List<UserModel>>
-        val usersToChat: LiveData<List<UserModel>>
         val isSelectUsersClicked: LiveData<Boolean>
     }
 
@@ -20,5 +20,11 @@ interface ChatUserSelectContract {
         fun updateSelectedUser(position: Int)
 
         fun selectUsersClicked()
+
+        fun userToChatClicked(user: UserModel)
+    }
+
+    sealed class ViewInstructions{
+        data class NavigateToChat(val user: UserModel, val selectedUserId: String): ViewInstructions()
     }
 }

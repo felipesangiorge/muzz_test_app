@@ -12,7 +12,6 @@ object Injection {
     fun provideAppDatabase(context: Context): AppDatabase {
         return appDatabase ?: let {
             appDatabase = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "muzzdatabase")
-                .createFromAsset("database/muzzdatabase.db")
                 .fallbackToDestructiveMigration()
                 .build()
             appDatabase!!
@@ -30,6 +29,7 @@ object Injection {
         userRepository = UserRepository(
             provideAppDatabase(context),
             provideAppDatabase(context).userDao(),
+            provideAppDatabase(context).chatMessageDao(),
             provideAppExecutors()
         )
         userRepository!!

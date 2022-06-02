@@ -12,6 +12,7 @@ class MainActivityViewModel(
     private val _error = MediatorLiveData<Resource.Error>()
     override val error: LiveData<Resource.Error> = _error
 
+
     class Factory(
         private val userRepository: UserRepository
     ) : ViewModelProvider.Factory {

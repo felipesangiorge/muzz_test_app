@@ -9,8 +9,29 @@ class ChatUserSelectViewModel(
     private val userRepository: UserRepository
 ) : ViewModel(), ChatUserSelectContract.ViewModel {
 
+    private val userMockToBeAdded = listOf(
+        UserModel(
+            "01",
+            "Felipe Sangiorge",
+            "first_user"
+        ),
+        UserModel(
+            "02",
+            "Muzz User",
+            "second_user"
+        ),
+        UserModel(
+            "03",
+            "Barbara",
+            "third_user"
+        )
+    )
+
     private val _error = MediatorLiveData<Resource.Error>()
     override val error: LiveData<Resource.Error> = _error
+
+    private val _navigation = MutableLiveData<ChatUserSelectContract.ViewInstructions>()
+    override val navigation: LiveData<ChatUserSelectContract.ViewInstructions> = _navigation
 
     private val _selectedUser = MutableLiveData<UserModel>()
     override val selectedUser: LiveData<UserModel> = _selectedUser
@@ -18,7 +39,12 @@ class ChatUserSelectViewModel(
     private val _usersToSelect = MutableLiveData<List<UserModel>>()
     override val usersToSelect: LiveData<List<UserModel>> = _usersToSelect
 
-    private val getUsersFromDbAction = MutableLiveData(Unit)
+    private val addUserIntoTheDatabaseAction = MutableLiveData(Unit)
+    private val addUserIntoTheDatabaseResult = addUserIntoTheDatabaseAction.switchMap {
+        userRepository.addUserIntoDatabase(userMockToBeAdded)
+    }
+
+    private val getUsersFromDbAction = MutableLiveData<Unit>()
     private val getUsersFromDbResult = getUsersFromDbAction.switchMap {
         userRepository.getUsersFromDatabase()
     }
@@ -27,6 +53,12 @@ class ChatUserSelectViewModel(
     override val isSelectUsersClicked: LiveData<Boolean> = _isSelectUsersClicked
 
     init {
+        _error.addSource(addUserIntoTheDatabaseResult){
+            when(it){
+                is Resource.Success -> getUsersFromDbAction.value = Unit
+            }
+        }
+
         _error.addSource(getUsersFromDbResult) {
             when (it) {
                 is Resource.Failure -> _error.value = it.error
@@ -61,6 +93,10 @@ class ChatUserSelectViewModel(
 
     override fun selectUsersClicked() {
         _isSelectUsersClicked.value = _isSelectUsersClicked.value == false
+    }
+
+    override fun userToChatClicked(user: UserModel) {
+        _navigation.value = ChatUserSelectContract.ViewInstructions.NavigateToChat(user, _selectedUser.value!!.id)
     }
 
     class Factory(
