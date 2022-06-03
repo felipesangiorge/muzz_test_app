@@ -1,7 +1,6 @@
 package com.muzz_test_felipe.domain.model_domain
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

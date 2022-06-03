@@ -17,8 +17,7 @@
         <action
             android:id="@+id/action_chatUserSelectFragment_to_mainChatFragment"
             app:destination="@id/mainChatFragment"
-            app:popUpTo="@id/chatUserSelectFragment"
-            app:popUpToInclusive="true"
+            app:popUpToSaveState="true"
             />
 
     </fragment>
@@ -29,5 +28,9 @@
         tools:layout="@layout/fragment_main_chat"
         >
 
+        <action
+            android:id="@+id/action_mainChatFragment_to_chatUserSelectFragment"
+            app:destination="@id/chatUserSelectFragment"
+            />
     </fragment>
 </navigation>

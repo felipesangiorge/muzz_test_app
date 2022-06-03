@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -39,6 +40,13 @@ class ChatFragment() : Fragment() {
         _binding = FragmentMainChatBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_mainChatFragment_to_chatUserSelectFragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         val user: UserModel = arguments?.getParcelable("user")!!
         val selectedUserId: String = arguments?.getString("selectedUserId")!!
 
@@ -66,7 +74,7 @@ class ChatFragment() : Fragment() {
         viewModel.navigation.observe(viewLifecycleOwner, Observer {
             when (it) {
                 ChatContract.ViewInstructions.NavigateBack -> {
-                    findNavController().navigateUp()
+                    findNavController().navigate(R.id.action_mainChatFragment_to_chatUserSelectFragment)
                 }
                 else -> {}
             }
@@ -103,7 +111,7 @@ class ChatFragment() : Fragment() {
             if (it) {
                 binding.ivSendComment.setColorFilter(ContextCompat.getColor(requireContext(), R.color.base_pink))
             } else {
-                binding.ivSendComment.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                binding.ivSendComment.setColorFilter(ContextCompat.getColor(requireContext(), R.color.light_gray))
             }
         })
 

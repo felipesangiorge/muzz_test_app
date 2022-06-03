@@ -1,6 +1,5 @@
 package com.muzz_test_felipe.database.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.muzz_test_felipe.database.model_entity.UserEntity

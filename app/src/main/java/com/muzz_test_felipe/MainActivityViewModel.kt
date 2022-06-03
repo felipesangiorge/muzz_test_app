@@ -1,9 +1,11 @@
 package com.muzz_test_felipe
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.muzz_test_felipe.core.Resource
 import com.muzz_test_felipe.data.UserRepository
-import com.muzz_test_felipe.domain.model_domain.UserModel
 
 class MainActivityViewModel(
     private val userRepository: UserRepository
