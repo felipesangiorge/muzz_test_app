@@ -96,6 +96,7 @@ class ChatFragment() : Fragment() {
         viewModel.messagesList.observe(viewLifecycleOwner, Observer {
             binding.rvMessages.scrollToPosition(it.size - 1)
             adapter.submitList(it)
+            adapter.messagesList = it
         })
 
         viewModel.isSendButtonClickable.observe(viewLifecycleOwner, Observer {
